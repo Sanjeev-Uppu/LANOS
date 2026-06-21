@@ -125,6 +125,7 @@ function WhyExists() {
     { k: "Faster Delivery", v: "60%", d: "Time-to-launch reduction", icon: Zap },
     { k: "Cost Efficiency", v: "−35%", d: "Operating cost decrease", icon: PiggyBank },
   ];
+
   return (
     <section className="relative py-32">
       <div className="mx-auto max-w-7xl px-6">
@@ -142,58 +143,110 @@ function WhyExists() {
           </motion.p>
         </div>
 
-        <div className="mt-16 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-4">
-          {metrics.map((m, i) => {
-            const Icon = m.icon;
-            return (
-              <motion.div
-                key={m.k}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.08 }}
-                whileHover={{ y: -4 }}
-                className="group relative overflow-hidden rounded-[28px] border hairline bg-white p-7 shadow-[0_1px_2px_rgba(7,26,46,0.04)] transition-shadow duration-500 hover:shadow-[0_30px_60px_-30px_rgba(25,211,243,0.45)]"
-              >
-                {/* Cyan radial bloom — top-right */}
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full opacity-70 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
-                  style={{
-                    background:
-                      "radial-gradient(circle, color-mix(in oklab, var(--accent) 55%, transparent) 0%, transparent 65%)",
-                  }}
-                />
-                {/* Inner sheen */}
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, transparent 40%, color-mix(in oklab, var(--accent) 14%, transparent) 100%)",
-                  }}
-                />
-
-                {/* Icon badge — navy gradient */}
-                <div
-                  className="relative mb-6 flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-[0_10px_24px_-10px_rgba(7,26,46,0.5)]"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, var(--navy) 0%, color-mix(in oklab, var(--navy) 80%, var(--accent)) 100%)",
-                  }}
-                >
-                  <Icon className="h-5 w-5" strokeWidth={1.8} />
-                </div>
-
-                <div className="relative text-3xl font-semibold text-[color:var(--navy)] md:text-4xl">{m.v}</div>
-                <div className="relative mt-2 text-sm font-medium text-[color:var(--navy)]">{m.k}</div>
-                <div className="relative mt-1 text-xs text-[color:var(--muted-foreground)]">{m.d}</div>
-              </motion.div>
-            );
-          })}
+        {/* Rotating glass-orb stat cards — replaces the old flat square grid.
+            Same 4 metrics, same copy, now styled as spinning spheres using
+            this page's own CSS custom properties so colors stay in sync
+            with the rest of the site automatically. */}
+        <div className="mt-20 grid grid-cols-2 gap-x-4 gap-y-12 sm:gap-x-6 md:flex md:flex-wrap md:items-start md:justify-center md:gap-12 lg:gap-16">
+          {metrics.map((m, i) => (
+            <StatOrb key={m.k} metric={m} index={i} />
+          ))}
         </div>
       </div>
     </section>
+  );
+}
+
+type Metric = { k: string; v: string; d: string; icon: typeof Clock };
+
+function StatOrb({ metric, index }: { metric: Metric; index: number }) {
+  const Icon = metric.icon;
+  // Alternate accent between the two brand tones already defined as
+  // CSS variables on this page, so the orbs read as one coherent set
+  // instead of four unrelated colors.
+  const accentVar = index % 2 === 0 ? "var(--accent)" : "var(--accent-hover)";
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24, scale: 0.92 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
+      className="flex flex-col items-center"
+    >
+      <div className="relative flex items-center justify-center">
+        {/* Ambient glow behind the sphere */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -inset-4 rounded-full opacity-60 blur-2xl"
+          style={{ background: accentVar }}
+        />
+
+        {/* Rotating glass sphere */}
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
+          className="relative flex h-[112px] w-[112px] items-center justify-center overflow-hidden rounded-full border hairline sm:h-[140px] sm:w-[140px] md:h-[160px] md:w-[160px]"
+          style={{
+            background:
+              "radial-gradient(circle at 30% 28%, rgba(255,255,255,0.95), color-mix(in oklab, var(--accent) 8%, white) 55%, color-mix(in oklab, var(--accent) 14%, white) 100%)",
+            boxShadow:
+              "inset 10px 10px 22px rgba(255,255,255,0.7), inset -14px -18px 30px color-mix(in oklab, var(--navy) 12%, transparent), 0 18px 40px -16px rgba(7,26,46,0.25)",
+          }}
+        >
+          {/* Counter-rotating tinted wash for parallax shimmer */}
+          <motion.div
+            animate={{ rotate: -360 }}
+            transition={{ duration: 11, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(135deg, ${accentVar}, transparent 65%)`,
+              opacity: 0.16,
+            }}
+          />
+
+          {/* Faint orbit rings for texture */}
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 9, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-3 rounded-full"
+            style={{ border: "1px solid color-mix(in oklab, var(--navy) 10%, transparent)" }}
+          />
+          <motion.div
+            animate={{ rotate: -360 }}
+            transition={{ duration: 13, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-7 rounded-full"
+            style={{ border: "1px solid color-mix(in oklab, var(--navy) 6%, transparent)" }}
+          />
+
+          {/* Specular shine */}
+          <div className="absolute left-[18%] top-[12%] h-9 w-11 rounded-full bg-white/50 blur-lg sm:h-11 sm:w-12" />
+
+          {/* Static content — never rotates */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5">
+            <div
+              className="flex h-8 w-8 items-center justify-center rounded-full text-white shadow-[0_8px_18px_-8px_rgba(7,26,46,0.5)] sm:h-9 sm:w-9 md:h-10 md:w-10"
+              style={{ background: "linear-gradient(135deg, var(--navy), color-mix(in oklab, var(--navy) 70%, var(--accent-hover)))" }}
+            >
+              <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-[18px] md:w-[18px]" strokeWidth={1.8} />
+            </div>
+            <span className="text-lg font-semibold tracking-tight text-[color:var(--navy)] sm:text-2xl md:text-[28px]">
+              {metric.v}
+            </span>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Label — sits below the circle, never overlapping it */}
+      <div className="mt-4 max-w-[130px] text-center sm:mt-5 sm:max-w-[160px]">
+        <h3 className="text-[13px] font-medium leading-tight text-[color:var(--navy)] sm:text-sm">
+          {metric.k}
+        </h3>
+        <p className="mt-1 text-[11px] leading-snug text-[color:var(--muted-foreground)] sm:text-xs">
+          {metric.d}
+        </p>
+      </div>
+    </motion.div>
   );
 }
 

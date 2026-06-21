@@ -12,7 +12,7 @@ const steps = [
 ];
 
 export default function Process() {
-  // Layout geometry (in % of square container)
+  // Layout geometry (in % of square container) — desktop/tablet circular layout only
   const R = 38; // card center radius
   const r = 32; // connector arc radius
   const cx = 50, cy = 50;
@@ -42,8 +42,86 @@ export default function Process() {
             </div>
           </div>
 
-          {/* Circular workflow */}
-          <div className="relative mx-auto aspect-square w-full max-w-[680px]">
+          {/* ───────────────────────────────────────────
+              MOBILE: vertical stacked timeline
+              Circular layout doesn't scale down below md —
+              cards overlap once the container gets narrow.
+              A simple top-to-bottom list with a connecting
+              line reads cleanly at any phone width.
+          ─────────────────────────────────────────── */}
+          <div className="relative md:hidden">
+            {/* Connecting line down the left side */}
+            <div
+              aria-hidden
+              className="absolute left-[19px] top-2 bottom-2 w-px"
+              style={{ background: "linear-gradient(180deg, color-mix(in oklab, var(--accent) 40%, transparent), color-mix(in oklab, var(--accent-hover) 40%, transparent))" }}
+            />
+
+            <div className="flex flex-col gap-5">
+              {steps.map((s, i) => {
+                const { Icon } = s;
+                return (
+                  <motion.div
+                    key={s.n}
+                    className="relative flex gap-4"
+                    initial={{ opacity: 0, y: 16 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-40px" }}
+                    transition={{ duration: 0.45, delay: i * 0.08, ease: "easeOut" }}
+                  >
+                    {/* Step icon node, sits on the connecting line */}
+                    <div
+                      className="relative z-10 flex h-10 w-10 flex-none items-center justify-center rounded-full border hairline bg-white"
+                      style={{ boxShadow: "0 4px 14px -6px rgba(7,26,46,0.18)" }}
+                    >
+                      <div
+                        className="flex h-7 w-7 items-center justify-center rounded-full"
+                        style={{ background: "color-mix(in oklab, var(--accent) 14%, white)" }}
+                      >
+                        <Icon style={{ color: "var(--accent-hover)", width: 14, height: 14 }} strokeWidth={1.8} />
+                      </div>
+                    </div>
+
+                    {/* Card */}
+                    <div
+                      className="min-w-0 flex-1 rounded-2xl border hairline bg-white/90 p-4"
+                      style={{ boxShadow: "0 4px 18px -10px rgba(7,26,46,0.12)" }}
+                    >
+                      <div className="text-[10px] font-semibold tracking-widest text-[color:var(--accent-hover)]">{s.n}</div>
+                      <h3 className="mt-0.5 text-[15px] font-semibold leading-tight text-[color:var(--navy)]">{s.t}</h3>
+                      <p className="mt-1.5 text-[12.5px] leading-relaxed text-[color:var(--muted-foreground)]">{s.d}</p>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {/* Center logo, shown once below the timeline on mobile */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.85 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="mt-8 flex justify-center"
+            >
+              <div
+                className="flex h-16 w-16 items-center justify-center rounded-full"
+                style={{
+                  background: "linear-gradient(135deg, var(--navy), var(--midnight))",
+                  boxShadow: "0 16px 40px -16px color-mix(in oklab, var(--accent) 70%, transparent), 0 0 0 5px rgba(255,255,255,0.6), 0 0 0 6px color-mix(in oklab, var(--navy) 10%, transparent)",
+                }}
+              >
+                <img src={logoUrl} alt="Lanos" className="h-8 w-8 object-contain" style={{ filter: "drop-shadow(0 0 6px color-mix(in oklab, var(--accent) 70%, transparent))" }} />
+              </div>
+            </motion.div>
+          </div>
+
+          {/* ───────────────────────────────────────────
+              DESKTOP / TABLET: circular orbit layout
+              Unchanged from the original — only visible
+              at md and above, where there's room for it.
+          ─────────────────────────────────────────── */}
+          <div className="relative mx-auto hidden aspect-square w-full max-w-[680px] md:block">
             {/* SVG: arcs + arrows + center glow */}
             <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full overflow-visible">
               <defs>
@@ -66,28 +144,16 @@ export default function Process() {
               {/* Arcs between consecutive steps */}
               {steps.map((s, i) => {
                 const next = steps[(i + 1) % steps.length];
-                // start a bit past the card edge along the radius
-                const startInset = 5.5;
-                const endInset = 5.5;
                 const sa = (s.angle * Math.PI) / 180;
                 const ea = (next.angle * Math.PI) / 180;
-                // bring start/end inward from card center toward arc circle
-                const sx = cx + Math.cos(sa) * (r);
-                const sy = cy + Math.sin(sa) * (r);
-                const ex = cx + Math.cos(ea) * (r);
-                const ey = cy + Math.sin(ea) * (r);
-                // adjust to leave gap near cards
-                const adj = (x: number, y: number, ang: number, sign: number) => ({
-                  x: x + Math.cos(ang + (sign * Math.PI) / 2) * 0,
-                  y: y + Math.sin(ang + (sign * Math.PI) / 2) * 0,
-                });
-                const A = adj(sx, sy, sa, 1);
-                const B = adj(ex, ey, ea, -1);
-                void startInset; void endInset;
+                const sx = cx + Math.cos(sa) * r;
+                const sy = cy + Math.sin(sa) * r;
+                const ex = cx + Math.cos(ea) * r;
+                const ey = cy + Math.sin(ea) * r;
                 return (
                   <motion.path
                     key={`arc-${i}`}
-                    d={`M ${A.x} ${A.y} A ${r} ${r} 0 0 1 ${B.x} ${B.y}`}
+                    d={`M ${sx} ${sy} A ${r} ${r} 0 0 1 ${ex} ${ey}`}
                     fill="none"
                     stroke="var(--accent-hover)"
                     strokeOpacity="0.55"
