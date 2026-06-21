@@ -1,22 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Code2, Bot, TrendingUp, Check, Clock, Zap, PiggyBank, Search, ClipboardList, FileText, Rocket } from "lucide-react";
 import { NeuralOrb } from "@/components/NeuralOrb";
-import logoUrl from "@/assets/lanos-logo.png";
-
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Lanos Innovation — Build what competitors won't see coming" },
-      { name: "description", content: "Software, AI operations, and growth systems engineered to compound. Lanos Innovation designs systems — not services." },
-      { property: "og:title", content: "Lanos Innovation — Engineered for the AI era" },
-      { property: "og:description", content: "Custom software, AI agents, and growth engines for ambitious businesses." },
-      { property: "og:url", content: "/" },
-    ],
-    links: [{ rel: "canonical", href: "/" }],
-  }),
-  component: Home,
-});
+import logoUrl from "../assets/lanos-logo.png";
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -719,7 +705,7 @@ function CTA() {
   );
 }
 
-function Home() {
+export default function Home() {
   return (
     <>
       <Hero />

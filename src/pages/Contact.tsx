@@ -1,22 +1,31 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, MessageSquare, Calendar, Check, Shield, Zap, Lock, ArrowRight, User, Building2, Briefcase, Clock } from "lucide-react";
+import {
+  Mail,
+  MessageSquare,
+  Calendar,
+  Check,
+  Shield,
+  Zap,
+  Lock,
+  ArrowRight,
+  User,
+  Building2,
+  Briefcase,
+  Clock,
+} from "lucide-react";
 import { z } from "zod";
 
-export const Route = createFileRoute("/contact")({
-  head: () => ({
-    meta: [
-      { title: "Contact — Lanos Innovation" },
-      { name: "description", content: "Start a serious project conversation with Lanos Innovation. Book a call, send a message, or reach us on WhatsApp." },
-      { property: "og:title", content: "Contact — Lanos Innovation" },
-      { property: "og:description", content: "Start your build with Lanos Innovation." },
-      { property: "og:url", content: "/contact" },
-    ],
-    links: [{ rel: "canonical", href: "/contact" }],
-  }),
-  component: ContactPage,
-});
+// ─────────────────────────────────────────────
+// Premium Brand Palette
+// ─────────────────────────────────────────────
+const COLORS = {
+  navy: "#041F3E",
+  royal: "#224CA6",
+  azure: "#1C89F4",
+  steel: "#87AAD6",
+  ice: "#DEF8FD",
+};
 
 const Schema = z.object({
   name: z.string().trim().min(1, "Name required").max(100),
@@ -28,7 +37,7 @@ const Schema = z.object({
   message: z.string().trim().min(10, "Tell us a bit more").max(2000),
 });
 
-function ContactPage() {
+export default function Contact() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,23 +61,27 @@ function ContactPage() {
   };
 
   return (
-    <section className="relative min-h-screen overflow-hidden pt-32 pb-24">
-      {/* Subtle neural ambient background */}
+    <section className="relative min-h-screen overflow-hidden pt-32 pb-24" style={{ background: COLORS.ice }}>
+      {/* Ambient brand background */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -left-40 top-20 h-[500px] w-[500px] rounded-full opacity-20 blur-3xl"
-             style={{ background: "radial-gradient(circle, var(--accent), transparent 70%)" }} />
-        <div className="absolute -right-40 bottom-20 h-[600px] w-[600px] rounded-full opacity-15 blur-3xl"
-             style={{ background: "radial-gradient(circle, var(--accent-hover), transparent 70%)" }} />
-        <svg className="absolute inset-0 h-full w-full opacity-[0.08]" viewBox="0 0 800 600" preserveAspectRatio="none">
+        <div
+          className="absolute -left-40 top-20 h-[500px] w-[500px] rounded-full opacity-25 blur-3xl"
+          style={{ background: `radial-gradient(circle, ${COLORS.azure}, transparent 70%)` }}
+        />
+        <div
+          className="absolute -right-40 bottom-20 h-[600px] w-[600px] rounded-full opacity-20 blur-3xl"
+          style={{ background: `radial-gradient(circle, ${COLORS.royal}, transparent 70%)` }}
+        />
+        <svg className="absolute inset-0 h-full w-full opacity-[0.10]" viewBox="0 0 800 600" preserveAspectRatio="none">
           <motion.path
             d="M0,400 Q200,300 400,380 T800,360"
-            fill="none" stroke="var(--accent)" strokeWidth="1"
+            fill="none" stroke={COLORS.azure} strokeWidth="1"
             animate={{ pathLength: [0, 1, 1], opacity: [0, 0.6, 0.6] }}
             transition={{ duration: 4, repeat: Infinity, repeatType: "reverse" }}
           />
           <motion.path
             d="M0,500 Q300,420 500,470 T800,440"
-            fill="none" stroke="var(--accent-hover)" strokeWidth="1"
+            fill="none" stroke={COLORS.royal} strokeWidth="1"
             animate={{ pathLength: [0, 1, 1], opacity: [0, 0.4, 0.4] }}
             transition={{ duration: 5, repeat: Infinity, repeatType: "reverse", delay: 0.5 }}
           />
@@ -79,17 +92,30 @@ function ContactPage() {
         {/* LEFT — Conversation */}
         <div className="flex flex-col justify-center">
           <div className="flex items-center gap-3">
-            <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-[color:var(--accent-hover)]">Contact us</p>
-            <div className="h-px w-12 bg-gradient-to-r from-[color:var(--accent)] to-transparent" />
+            <p className="text-[11px] font-medium uppercase tracking-[0.28em]" style={{ color: COLORS.royal }}>
+              Contact us
+            </p>
+            <div className="h-px w-12" style={{ background: `linear-gradient(90deg, ${COLORS.azure}, transparent)` }} />
           </div>
 
-          <h1 className="mt-6 text-5xl leading-[1.05] text-[color:var(--navy)] md:text-6xl lg:text-[64px]">
+          <h1 className="mt-6 text-5xl leading-[1.05] md:text-6xl lg:text-[64px]" style={{ color: COLORS.navy }}>
             Let's build something
             <br />
-            that <span className="text-gradient italic">compounds.</span>
+            that{" "}
+            <span
+              className="italic"
+              style={{
+                background: `linear-gradient(135deg, ${COLORS.navy} 0%, ${COLORS.royal} 50%, ${COLORS.azure} 100%)`,
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+                color: "transparent",
+              }}
+            >
+              compounds.
+            </span>
           </h1>
 
-          <p className="mt-6 max-w-md text-base leading-relaxed text-[color:var(--muted-foreground)]">
+          <p className="mt-6 max-w-md text-base leading-relaxed" style={{ color: COLORS.royal }}>
             Share your vision. We'll map the smartest path forward and respond within one business day.
           </p>
 
@@ -99,21 +125,18 @@ function ContactPage() {
               icon={<Calendar className="h-5 w-5" />}
               title="Book a Call"
               sub="Schedule a 30-minute strategy call."
-              variant="lift"
             />
             <ContactCard
               href="mailto:hello@lanosinnovation.com"
               icon={<Mail className="h-5 w-5" />}
               title="Email Us"
               sub="hello@lanosinnovation.com"
-              variant="glow"
             />
             <ContactCard
               href="https://wa.me/"
               icon={<MessageSquare className="h-5 w-5" />}
               title="WhatsApp"
               sub="Quick conversation. Real answers."
-              variant="magnetic"
             />
           </div>
         </div>
@@ -125,21 +148,25 @@ function ContactPage() {
           transition={{ duration: 0.7 }}
           className="relative overflow-hidden rounded-[28px] p-[1px]"
           style={{
-            background: "linear-gradient(135deg, color-mix(in oklab, var(--accent) 30%, transparent), transparent 40%, color-mix(in oklab, var(--accent-hover) 25%, transparent))",
+            background: `linear-gradient(135deg, ${COLORS.azure}55, transparent 40%, ${COLORS.royal}45)`,
           }}
         >
           <div
             className="relative overflow-hidden rounded-[27px] p-8 md:p-10"
             style={{
-              background: "linear-gradient(160deg, oklch(0.22 0.06 250) 0%, oklch(0.16 0.05 255) 50%, oklch(0.20 0.06 252) 100%)",
-              boxShadow: "0 50px 100px -30px rgba(7,26,46,0.6), inset 0 1px 0 color-mix(in oklab, white 6%, transparent)",
+              background: `linear-gradient(160deg, ${COLORS.navy} 0%, #06122A 50%, ${COLORS.navy} 100%)`,
+              boxShadow: "0 50px 100px -30px rgba(2,13,27,0.65), inset 0 1px 0 rgba(255,255,255,0.06)",
             }}
           >
             {/* Internal glow */}
-            <div className="pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full opacity-30 blur-3xl"
-                 style={{ background: "radial-gradient(circle, var(--accent), transparent 60%)" }} />
-            <div className="pointer-events-none absolute -bottom-32 -left-32 h-80 w-80 rounded-full opacity-20 blur-3xl"
-                 style={{ background: "radial-gradient(circle, var(--accent-hover), transparent 60%)" }} />
+            <div
+              className="pointer-events-none absolute -right-32 -top-32 h-80 w-80 rounded-full opacity-30 blur-3xl"
+              style={{ background: `radial-gradient(circle, ${COLORS.azure}, transparent 60%)` }}
+            />
+            <div
+              className="pointer-events-none absolute -bottom-32 -left-32 h-80 w-80 rounded-full opacity-25 blur-3xl"
+              style={{ background: `radial-gradient(circle, ${COLORS.steel}, transparent 60%)` }}
+            />
 
             {sent ? (
               <SuccessState />
@@ -148,13 +175,11 @@ function ContactPage() {
                 {/* Header */}
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <h2 className="text-2xl text-white md:text-3xl" style={{ fontFamily: "var(--font-display)" }}>
-                      Start the conversation
-                    </h2>
+                    <h2 className="text-2xl text-white md:text-3xl">Start the conversation</h2>
                     <p className="mt-2 text-sm text-white/60">Tell us about your project and goals.</p>
                   </div>
                   <div className="hidden shrink-0 items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 backdrop-blur-md sm:flex">
-                    <Shield className="h-4 w-4 text-[color:var(--accent)]" />
+                    <Shield className="h-4 w-4" style={{ color: COLORS.azure }} />
                     <div className="text-[10px] leading-tight text-white/80">
                       Your data is safe with us.<br /><span className="text-white/50">Zero spam. Ever.</span>
                     </div>
@@ -188,7 +213,7 @@ function ContactPage() {
                   </label>
 
                   {error && (
-                    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-[color:var(--destructive)]">
+                    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm" style={{ color: "#FF6B6B" }}>
                       {error}
                     </motion.p>
                   )}
@@ -196,14 +221,13 @@ function ContactPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="group relative mt-2 inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full py-4 text-sm font-semibold text-white shadow-[0_20px_50px_-15px_color-mix(in_oklab,var(--accent)_60%,transparent)] transition-transform hover:-translate-y-0.5 disabled:opacity-70"
+                    className="group relative mt-2 inline-flex w-full items-center justify-center gap-2 overflow-hidden rounded-full py-4 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5 disabled:opacity-70"
                     style={{
-                      background: "linear-gradient(95deg, var(--accent-hover) 0%, oklch(0.55 0.22 255) 50%, var(--accent) 100%)",
+                      background: `linear-gradient(95deg, ${COLORS.royal} 0%, ${COLORS.azure} 100%)`,
+                      boxShadow: `0 20px 50px -15px ${COLORS.azure}99`,
                     }}
                   >
-                    <span
-                      className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full"
-                    />
+                    <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
                     {loading ? (
                       <>
                         <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
@@ -223,8 +247,14 @@ function ContactPage() {
                   <div className="flex items-center gap-3">
                     <div className="flex -space-x-2">
                       {[1, 2, 3].map((i) => (
-                        <div key={i} className="h-7 w-7 rounded-full border-2 border-[color:var(--navy)]"
-                             style={{ background: `linear-gradient(135deg, var(--accent), var(--accent-hover) ${i * 30}%)` }} />
+                        <div
+                          key={i}
+                          className="h-7 w-7 rounded-full border-2"
+                          style={{
+                            borderColor: COLORS.navy,
+                            background: `linear-gradient(135deg, ${COLORS.azure}, ${COLORS.royal} ${i * 30}%)`,
+                          }}
+                        />
                       ))}
                     </div>
                     <div className="text-[12px] leading-tight text-white/85">
@@ -247,24 +277,23 @@ function ContactPage() {
       {/* Inline luxe-input styles */}
       <style>{`
         .luxe-input {
-          background: color-mix(in oklab, white 4%, transparent);
-          border: 1px solid color-mix(in oklab, white 10%, transparent);
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.10);
           border-radius: 12px;
           color: white;
           outline: none;
           transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
         }
-        .luxe-input::placeholder { color: color-mix(in oklab, white 35%, transparent); }
+        .luxe-input::placeholder { color: rgba(255,255,255,0.35); }
         .luxe-input:hover {
-          border-color: color-mix(in oklab, var(--accent) 40%, transparent);
+          border-color: ${COLORS.azure}66;
         }
         .luxe-input:focus {
-          border-color: color-mix(in oklab, var(--accent) 70%, transparent);
-          box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 15%, transparent),
-                      inset 0 0 24px color-mix(in oklab, var(--accent) 8%, transparent);
-          background: color-mix(in oklab, white 6%, transparent);
+          border-color: ${COLORS.azure}B3;
+          box-shadow: 0 0 0 4px ${COLORS.azure}26, inset 0 0 24px ${COLORS.azure}14;
+          background: rgba(255,255,255,0.06);
         }
-        select.luxe-input option { background: oklch(0.18 0.05 255); color: white; }
+        select.luxe-input option { background: ${COLORS.navy}; color: white; }
       `}</style>
     </section>
   );
@@ -306,27 +335,32 @@ function SelectField({ name, label, icon, placeholder, options }: { name: string
   );
 }
 
-function ContactCard({ href, icon, title, sub, variant }: { href: string; icon: React.ReactNode; title: string; sub: string; variant: "lift" | "glow" | "magnetic" }) {
-  const variantClass =
-    variant === "lift" ? "hover:-translate-y-1" :
-    variant === "glow" ? "hover:shadow-[0_20px_60px_-20px_color-mix(in_oklab,var(--accent)_60%,transparent)]" :
-    "hover:border-[color:var(--accent)] hover:bg-white";
+function ContactCard({ href, icon, title, sub }: { href: string; icon: React.ReactNode; title: string; sub: string }) {
   return (
     <a
       href={href}
       target={href.startsWith("http") ? "_blank" : undefined}
       rel={href.startsWith("http") ? "noreferrer" : undefined}
-      className={`group flex items-center gap-4 rounded-2xl border hairline bg-white/80 p-5 backdrop-blur-md transition-all duration-300 ${variantClass}`}
+      className="group flex items-center gap-4 rounded-2xl border p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1"
+      style={{
+        borderColor: `${COLORS.royal}26`,
+        background: "rgba(255,255,255,0.85)",
+      }}
     >
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-white transition-transform group-hover:scale-105"
-           style={{ background: "linear-gradient(135deg, var(--accent-hover), var(--accent))" }}>
+      <div
+        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-white transition-transform group-hover:scale-105"
+        style={{ background: `linear-gradient(135deg, ${COLORS.royal}, ${COLORS.azure})` }}
+      >
         {icon}
       </div>
       <div className="flex-1">
-        <div className="text-sm font-semibold text-[color:var(--navy)]">{title}</div>
-        <div className="text-xs text-[color:var(--muted-foreground)]">{sub}</div>
+        <div className="text-sm font-semibold" style={{ color: COLORS.navy }}>{title}</div>
+        <div className="text-xs" style={{ color: COLORS.royal }}>{sub}</div>
       </div>
-      <ArrowRight className="h-4 w-4 text-[color:var(--muted-foreground)] transition-all group-hover:translate-x-1 group-hover:text-[color:var(--accent-hover)]" />
+      <ArrowRight
+        className="h-4 w-4 transition-all group-hover:translate-x-1"
+        style={{ color: COLORS.royal }}
+      />
     </a>
   );
 }
@@ -351,11 +385,11 @@ function SuccessState() {
         animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 200, damping: 15 }}
         className="flex h-16 w-16 items-center justify-center rounded-full"
-        style={{ background: "linear-gradient(135deg, var(--accent), var(--accent-hover))" }}
+        style={{ background: `linear-gradient(135deg, ${COLORS.azure}, ${COLORS.royal})` }}
       >
         <Check className="h-7 w-7 text-white" />
       </motion.div>
-      <h2 className="text-2xl text-white" style={{ fontFamily: "var(--font-display)" }}>Inquiry on its way</h2>
+      <h2 className="text-2xl text-white">Inquiry on its way</h2>
       <p className="max-w-xs text-sm text-white/60">Your email client should be opening. If not, write to hello@lanosinnovation.com — we reply within one business day.</p>
     </motion.div>
   );

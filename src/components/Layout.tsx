@@ -1,6 +1,6 @@
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import logoUrl from "@/assets/lanos-logo.png";
+import logoUrl from "../assets/lanos-logo.png";
 
 // ─────────────────────────────────────────────
 // Premium Brand Palette

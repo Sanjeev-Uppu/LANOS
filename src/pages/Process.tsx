@@ -1,21 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, ClipboardList, FileText, Code2, Rocket } from "lucide-react";
-import logoUrl from "@/assets/lanos-logo.png";
-
-export const Route = createFileRoute("/process")({
-  head: () => ({
-    meta: [
-      { title: "Process — Lanos Innovation" },
-      { name: "description", content: "A clear, proven circular process — Discover, Audit, Proposal, Build, Handover." },
-      { property: "og:title", content: "Process — Lanos Innovation" },
-      { property: "og:description", content: "From discovery to handover — a premium build, end to end." },
-      { property: "og:url", content: "/process" },
-    ],
-    links: [{ rel: "canonical", href: "/process" }],
-  }),
-  component: ProcessPage,
-});
+import logoUrl from "../assets/lanos-logo.png";
 
 const steps = [
   { n: "01", t: "Discover", d: "We map your real bottlenecks — not the symptoms.", Icon: Search, angle: -90 },
@@ -25,7 +11,7 @@ const steps = [
   { n: "05", t: "Handover", d: "Documented, owned by you, designed to scale.", Icon: Rocket, angle: 198 },
 ];
 
-function ProcessPage() {
+export default function Process() {
   // Layout geometry (in % of square container)
   const R = 38; // card center radius
   const r = 32; // connector arc radius

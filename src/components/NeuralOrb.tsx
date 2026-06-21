@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import logoUrl from "@/assets/lanos-logo.png";
+import logoUrl from "../assets/lanos-logo.png";
 
 // ─────────────────────────────────────────────
 // Premium Brand Palette
