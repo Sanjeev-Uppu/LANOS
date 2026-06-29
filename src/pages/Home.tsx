@@ -106,7 +106,7 @@ function Hero() {
             transition={{ duration: 0.7, delay: 1.4 }}
             className="mt-8 text-xs text-[color:var(--muted-foreground)]"
           >
-            Trusted by ambitious businesses building their next phase.
+            
           </motion.p>
         </div>
 
@@ -143,10 +143,6 @@ function WhyExists() {
           </motion.p>
         </div>
 
-        {/* Rotating glass-orb stat cards — replaces the old flat square grid.
-            Same 4 metrics, same copy, now styled as spinning spheres using
-            this page's own CSS custom properties so colors stay in sync
-            with the rest of the site automatically. */}
         <div className="mt-20 grid grid-cols-2 gap-x-4 gap-y-12 sm:gap-x-6 md:flex md:flex-wrap md:items-start md:justify-center md:gap-12 lg:gap-16">
           {metrics.map((m, i) => (
             <StatOrb key={m.k} metric={m} index={i} />
@@ -161,9 +157,6 @@ type Metric = { k: string; v: string; d: string; icon: typeof Clock };
 
 function StatOrb({ metric, index }: { metric: Metric; index: number }) {
   const Icon = metric.icon;
-  // Alternate accent between the two brand tones already defined as
-  // CSS variables on this page, so the orbs read as one coherent set
-  // instead of four unrelated colors.
   const accentVar = index % 2 === 0 ? "var(--accent)" : "var(--accent-hover)";
 
   return (
@@ -175,17 +168,15 @@ function StatOrb({ metric, index }: { metric: Metric; index: number }) {
       className="flex flex-col items-center"
     >
       <div className="relative flex items-center justify-center">
-        {/* Ambient glow behind the sphere */}
+        {/* ✅ Change 6: Reduced ambient glow — opacity 0.60→0.25, blur-2xl→blur-xl, -inset-4→-inset-2 */}
         <div
           aria-hidden
-          className="pointer-events-none absolute -inset-4 rounded-full opacity-60 blur-2xl"
+          className="pointer-events-none absolute -inset-2 rounded-full opacity-25 blur-xl"
           style={{ background: accentVar }}
         />
 
-        {/* Rotating glass sphere */}
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
+        {/* ✅ Change 1: Static sphere — removed all motion.div rotation animations */}
+        <div
           className="relative flex h-[112px] w-[112px] items-center justify-center overflow-hidden rounded-full border hairline sm:h-[140px] sm:w-[140px] md:h-[160px] md:w-[160px]"
           style={{
             background:
@@ -194,10 +185,9 @@ function StatOrb({ metric, index }: { metric: Metric; index: number }) {
               "inset 10px 10px 22px rgba(255,255,255,0.7), inset -14px -18px 30px color-mix(in oklab, var(--navy) 12%, transparent), 0 18px 40px -16px rgba(7,26,46,0.25)",
           }}
         >
-          {/* Counter-rotating tinted wash for parallax shimmer */}
-          <motion.div
-            animate={{ rotate: -360 }}
-            transition={{ duration: 11, repeat: Infinity, ease: "linear" }}
+          {/* ✅ Change 1: Removed counter-rotating tinted wash */}
+          {/* Static accent tint wash */}
+          <div
             className="absolute inset-0"
             style={{
               background: `linear-gradient(135deg, ${accentVar}, transparent 65%)`,
@@ -205,16 +195,12 @@ function StatOrb({ metric, index }: { metric: Metric; index: number }) {
             }}
           />
 
-          {/* Faint orbit rings for texture */}
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 9, repeat: Infinity, ease: "linear" }}
+          {/* ✅ Change 1: Removed rotating orbit rings — now static */}
+          <div
             className="absolute inset-3 rounded-full"
             style={{ border: "1px solid color-mix(in oklab, var(--navy) 10%, transparent)" }}
           />
-          <motion.div
-            animate={{ rotate: -360 }}
-            transition={{ duration: 13, repeat: Infinity, ease: "linear" }}
+          <div
             className="absolute inset-7 rounded-full"
             style={{ border: "1px solid color-mix(in oklab, var(--navy) 6%, transparent)" }}
           />
@@ -222,7 +208,7 @@ function StatOrb({ metric, index }: { metric: Metric; index: number }) {
           {/* Specular shine */}
           <div className="absolute left-[18%] top-[12%] h-9 w-11 rounded-full bg-white/50 blur-lg sm:h-11 sm:w-12" />
 
-          {/* Static content — never rotates */}
+          {/* Static content */}
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5">
             <div
               className="flex h-8 w-8 items-center justify-center rounded-full text-white shadow-[0_8px_18px_-8px_rgba(7,26,46,0.5)] sm:h-9 sm:w-9 md:h-10 md:w-10"
@@ -234,10 +220,10 @@ function StatOrb({ metric, index }: { metric: Metric; index: number }) {
               {metric.v}
             </span>
           </div>
-        </motion.div>
+        </div>
       </div>
 
-      {/* Label — sits below the circle, never overlapping it */}
+      {/* Label */}
       <div className="mt-4 max-w-[130px] text-center sm:mt-5 sm:max-w-[160px]">
         <h3 className="text-[13px] font-medium leading-tight text-[color:var(--navy)] sm:text-sm">
           {metric.k}
@@ -269,19 +255,16 @@ function SoftwarePreview() {
         <circle cx="14" cy="11" r="3" fill="#ff5f57" />
         <circle cx="26" cy="11" r="3" fill="#febc2e" />
         <circle cx="38" cy="11" r="3" fill="#28c840" />
-        {/* Sidebar */}
         <rect x="10" y="32" width="64" height="134" rx="8" fill="#0b1830" />
         {[0,1,2,3,4].map(i => (
           <rect key={i} x="18" y={42 + i*22} width="48" height="6" rx="3" fill="var(--accent)" fillOpacity={i===1 ? 0.9 : 0.2} />
         ))}
-        {/* Main chart card */}
         <rect x="82" y="32" width="228" height="84" rx="8" fill="#0b1830" />
         <path d="M92 100 L122 78 L150 88 L182 60 L214 70 L246 48 L290 58 L290 108 L92 108 Z" fill="url(#sw-chart)" />
         <path d="M92 100 L122 78 L150 88 L182 60 L214 70 L246 48 L290 58" stroke="var(--accent)" strokeWidth="1.6" fill="none" />
         {[122,150,182,214,246,290].map((x,i)=>(
           <circle key={i} cx={x} cy={[78,88,60,70,48,58][i]} r="2" fill="var(--accent)" />
         ))}
-        {/* Stat cards */}
         <rect x="82" y="124" width="72" height="42" rx="6" fill="#0b1830" />
         <rect x="90" y="132" width="32" height="5" rx="2" fill="var(--accent)" fillOpacity="0.6" />
         <rect x="90" y="144" width="48" height="10" rx="2" fill="#fff" fillOpacity="0.9" />
@@ -306,7 +289,6 @@ function AIPreview() {
           <stop offset="100%" stopColor="var(--accent-hover)" stopOpacity="0" />
         </linearGradient>
       </defs>
-      {/* Inputs */}
       {["CRM","Forms","APIs"].map((t,i)=>(
         <g key={t} transform={`translate(20 ${36 + i*52})`}>
           <rect width="92" height="36" rx="8" fill="#fff" stroke="var(--navy)" strokeOpacity="0.12" />
@@ -315,7 +297,6 @@ function AIPreview() {
           <text x="28" y="22" fontSize="10" fontFamily="Inter, sans-serif" fill="var(--navy)" fontWeight="500">{t}</text>
         </g>
       ))}
-      {/* Center engine */}
       <g transform="translate(160 70)">
         <rect width="80" height="80" rx="16" fill="var(--navy)" />
         <circle cx="40" cy="40" r="28" fill="none" stroke="var(--accent)" strokeOpacity="0.4" strokeDasharray="2 3" />
@@ -323,7 +304,6 @@ function AIPreview() {
         <circle cx="40" cy="40" r="6" fill="var(--accent)" />
         <text x="40" y="120" textAnchor="middle" fontSize="9" fontFamily="Inter, sans-serif" fontWeight="600" fill="var(--navy)">AI Engine</text>
       </g>
-      {/* Outputs */}
       {["Actions","Updates","Alerts"].map((t,i)=>(
         <g key={t} transform={`translate(288 ${36 + i*52})`}>
           <rect width="92" height="36" rx="8" fill="#fff" stroke="var(--navy)" strokeOpacity="0.12" />
@@ -331,7 +311,6 @@ function AIPreview() {
           <text x="28" y="22" fontSize="10" fontFamily="Inter, sans-serif" fill="var(--navy)" fontWeight="500">{t}</text>
         </g>
       ))}
-      {/* Connecting lines */}
       {[0,1,2].map(i=>(
         <g key={i}>
           <path d={`M112 ${54 + i*52} C 140 ${54 + i*52}, 140 110, 160 110`} stroke="url(#ai-line)" strokeWidth="1.4" fill="none" />
@@ -351,7 +330,6 @@ function GrowthPreview() {
           <stop offset="100%" stopColor="var(--accent-hover)" stopOpacity="0" />
         </linearGradient>
       </defs>
-      {/* Main analytics card */}
       <g transform="translate(24 24)">
         <rect width="240" height="172" rx="14" fill="#fff" stroke="var(--navy)" strokeOpacity="0.08" />
         <rect x="16" y="16" width="80" height="8" rx="3" fill="var(--navy)" fillOpacity="0.7" />
@@ -359,13 +337,11 @@ function GrowthPreview() {
         <text x="16" y="68" fontSize="22" fontFamily="Inter, sans-serif" fontWeight="700" fill="var(--navy)">3.4×</text>
         <rect x="64" y="58" width="34" height="14" rx="7" fill="var(--accent)" fillOpacity="0.2" />
         <text x="81" y="68" textAnchor="middle" fontSize="8" fontFamily="Inter, sans-serif" fontWeight="700" fill="var(--accent-hover)">ROAS</text>
-        {/* area chart */}
         <path d="M16 140 L48 120 L80 128 L112 100 L144 110 L176 80 L208 70 L224 64 L224 156 L16 156 Z" fill="url(#gr-area)" />
         <path d="M16 140 L48 120 L80 128 L112 100 L144 110 L176 80 L208 70 L224 64" stroke="var(--accent-hover)" strokeWidth="1.8" fill="none" />
         <circle cx="224" cy="64" r="3" fill="var(--accent-hover)" />
         <circle cx="224" cy="64" r="6" fill="var(--accent-hover)" fillOpacity="0.25" />
       </g>
-      {/* Side metric cards */}
       <g transform="translate(280 24)">
         <rect width="96" height="52" rx="10" fill="var(--navy)" />
         <rect x="12" y="12" width="36" height="6" rx="2" fill="var(--accent)" fillOpacity="0.7" />
@@ -420,7 +396,8 @@ function Services() {
   ];
 
   return (
-    <section className="relative py-32" style={{ background: "linear-gradient(180deg, #fafbfd 0%, #f3f6fa 100%)" }}>
+    // ✅ Change 9: Services gets white background for better section contrast flow
+    <section className="relative py-32 bg-white">
       <div className="mx-auto max-w-7xl px-6">
         <motion.p {...fadeUp} className="text-xs uppercase tracking-[0.22em] text-[color:var(--muted-foreground)]">Services</motion.p>
         <div className="mt-4 grid gap-8 md:grid-cols-[2fr_1fr] md:items-end">
@@ -448,7 +425,6 @@ function Services() {
                 className="relative h-[220px] overflow-hidden rounded-[18px]"
                 style={{ background: s.bg }}
               >
-                {/* faint grid */}
                 <div
                   aria-hidden
                   className="absolute inset-0 opacity-40"
@@ -462,7 +438,6 @@ function Services() {
                 <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-[1.03]">
                   {s.preview}
                 </div>
-                {/* cyan bloom on hover */}
                 <div
                   aria-hidden
                   className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
@@ -529,7 +504,8 @@ function Process() {
   };
 
   return (
-    <section className="py-32 overflow-hidden">
+    // ✅ Change 9: Process gets sky-blue tint for contrast between white sections
+    <section className="py-32 overflow-hidden" style={{ background: "linear-gradient(180deg, #f0f6ff 0%, #e8f0fb 100%)" }}>
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,360px)_1fr] lg:items-start">
           <div className="lg:pt-12">
@@ -672,7 +648,8 @@ function CaseStudies() {
     },
   ];
   return (
-    <section className="bg-[color:var(--muted)]/40 py-32">
+    // ✅ Change 2: White background instead of muted gray
+    <section className="bg-white py-32">
       <div className="mx-auto max-w-7xl px-6">
         <motion.p {...fadeUp} className="text-xs uppercase tracking-[0.22em] text-[color:var(--muted-foreground)]">Case Studies</motion.p>
         <motion.h2 {...fadeUp} className="mt-4 max-w-3xl text-4xl leading-tight text-[color:var(--navy)] md:text-5xl">
@@ -686,7 +663,8 @@ function CaseStudies() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: i * 0.08 }}
-              className="group relative flex flex-col overflow-hidden rounded-3xl border hairline bg-white p-8"
+              // ✅ Change 8: Premium card styling with stronger shadow and hover
+              className="group relative flex flex-col overflow-hidden rounded-[28px] border border-slate-200 bg-white p-8 shadow-lg hover:shadow-2xl transition-all duration-300"
             >
               <div className="text-[10px] uppercase tracking-widest text-[color:var(--accent-hover)]">{c.tag}</div>
               <h3 className="mt-3 flex-1 text-xl leading-snug text-[color:var(--navy)]">{c.title}</h3>
@@ -704,43 +682,15 @@ function CaseStudies() {
   );
 }
 
-function Philosophy() {
-  return (
-    <section className="relative overflow-hidden py-32" style={{ background: "linear-gradient(135deg, var(--navy) 0%, var(--midnight) 100%)" }}>
-      <div className="absolute inset-0 opacity-30"
-           style={{ background: "radial-gradient(circle at 30% 50%, var(--accent), transparent 60%)" }} />
-      <div className="absolute inset-0 noise-overlay" />
-      <div className="relative mx-auto max-w-5xl px-6">
-        <motion.p {...fadeUp} className="text-xs uppercase tracking-[0.22em] text-[color:var(--accent)]">Founder note</motion.p>
-        <motion.blockquote
-          {...fadeUp}
-          className="mt-8 text-4xl leading-tight text-white md:text-6xl"
-        >
-          "We don't automate
-          <br />
-          for the sake of AI.
-          <br />
-          <span className="text-[color:var(--accent)]">We engineer systems</span>
-          <br />
-          that compound."
-        </motion.blockquote>
-        <motion.div {...fadeUp} className="mt-12 flex items-center gap-4">
-          <div className="h-12 w-12 rounded-full" style={{ background: "linear-gradient(135deg, var(--accent), white)" }} />
-          <div>
-            <div className="text-sm font-medium text-white">Founder</div>
-            <div className="text-xs text-white/60">Lanos Innovation</div>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
+// ✅ Change 3: Philosophy / Founder Note section removed entirely
 
 function CTA() {
   return (
-    <section className="py-32">
+    // ✅ Change 5: Reduced vertical padding py-32 → py-24
+    <section className="py-24">
       <div className="mx-auto max-w-5xl px-6 text-center">
-        <motion.h2 {...fadeUp} className="text-4xl leading-tight text-[color:var(--navy)] md:text-6xl">
+        {/* ✅ Change 4: Smaller, more elegant heading size */}
+        <motion.h2 {...fadeUp} className="text-3xl sm:text-4xl lg:text-5xl leading-tight font-semibold text-[color:var(--navy)]">
           Let's build something
           <br />
           <span className="text-gradient">competitors won't see coming.</span>
@@ -759,6 +709,7 @@ function CTA() {
 }
 
 export default function Home() {
+  // ✅ Change 3: Philosophy removed from render tree
   return (
     <>
       <Hero />
@@ -766,7 +717,6 @@ export default function Home() {
       <Services />
       <Process />
       <CaseStudies />
-      <Philosophy />
       <CTA />
     </>
   );
