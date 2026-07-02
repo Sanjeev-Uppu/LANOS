@@ -29,9 +29,9 @@ const NOISE_TEXTURE =
 
 const cases = [
   {
-    id: "euro-fresh",
+    id: "Pure-fresh",
     tag: "Hyperlocal Commerce",
-    app: "Euro Fresh",
+    app: "Pure Fresh",
     image: case1,
     weeks: "8",
     weeksLabel: "weeks to launch",
@@ -44,13 +44,13 @@ const cases = [
     capabilities:
       "A single marketplace spanning fruits, vegetables, dairy, homemade food and medicine — fast product discovery, secure sign-in, efficient order management, and a mobile-first experience built to grow without a rebuild.",
     outcome:
-      "Euro Fresh launched with a professional brand identity, a responsive website and a high-performance mobile app — a technical foundation built for efficient day-to-day operations.",
+      "Pure Fresh launched with a professional brand identity, a responsive website and a high-performance mobile app — a technical foundation built for efficient day-to-day operations.",
     impact:
       "An idea became a fully working platform serving several business categories in one app, strengthening the brand's online presence and setting up the business for expansion.",
     testimonial:
       "The team understood our vision from the very beginning and transformed it into a modern digital platform that exceeded our expectations.",
     testimonialAuthor: "Ratnababu",
-    testimonialRole: "Founder, Euro Fresh",
+    testimonialRole: "Founder, Pure Fresh",
     lookingAhead:
       "Real-time order tracking, digital payments, loyalty programs, intelligent recommendations, vendor tools and expansion into new locations.",
     accent: {
